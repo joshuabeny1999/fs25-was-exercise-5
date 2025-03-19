@@ -1,10 +1,24 @@
 // personal assistant agent 
 
 /* Task 2 Start of your solution */
-// Interference Rules for owner_state
+// Interference Rules
 owner_awake :- owner_state("awake").
 owner_asleep :- owner_state("asleep").
 
+best_option(Option) :- 
+    wake_up_ranking(Option, Rank)
+    & not lower_ranking_exists(Rank).
+
+lower_ranking_exists(Rank) :-
+    wake_up_ranking(_, LowerRank)
+    & LowerRank < Rank.
+    
+// Beliefs
+wake_up_ranking(vibrations, 0).
+wake_up_ranking(natural_light, 1).
+wake_up_ranking(artificial_light, 2).
+
+// Plans
 @blinds_added_plan
 +blinds(State)
     :   true
@@ -64,13 +78,26 @@ owner_asleep :- owner_state("asleep").
         .print("Enjoy your event");
     .
 
-@handle_upcoming_event_asleep_plan
+@handle_upcoming_event_asleep_vib_plan
 +upcoming_event("now")
-    : owner_asleep
+    : owner_asleep & best_option(vibrations)
     <-
-        .print("Starting wake-up routine");
+        .print("Starting wake-up routine with vibrations");
     .
 
+@handle_upcoming_event_asleep_wake_plan
++upcoming_event("now")
+    : owner_asleep & best_option(natural_light)
+    <-
+        .print("Starting wake-up routine with natural light");
+    .
+
+@handle_upcoming_event_asleep_art_plan
++upcoming_event("now")
+    : owner_asleep & best_option(artificial_light)
+    <-
+        .print("Starting wake-up routine with artificial light");
+    .
 /* Task 2 End of your solution */
 
 /* Import behavior of agents that work in CArtAgO environments */
