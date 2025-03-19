@@ -7,9 +7,9 @@
 /* Initial goals */
 !start_sum(4,2). // uncomment for Task 1.2.1
 !start_sum(4,-2). // uncomment for Task 1.2.1
-//!start_division(4,2). // uncomment for Task 1.2.2
-//!start_division(4,2.5). // uncomment for Task 1.2.2
-//!start_division(4,0). // uncomment for Task 1.2.2
+!start_division(4,2). // uncomment for Task 1.2.2
+!start_division(4,2.5). // uncomment for Task 1.2.2
+!start_division(4,0). // uncomment for Task 1.2.2
 //!start_even_or_odd(4). // uncomment for Task 1.2.3
 //!start_even_or_odd(5). // uncomment for Task 1.2.3
 //!start_list_generation(0,4). // uncomment for Task 1.2.4
@@ -47,6 +47,19 @@
     .
 
 /* Task 1.2.2 Start of your solution */
+@compute_division_if_zero_task_1_2_2_plan
++!compute_division(Dividend,Divisor,Quotient)
+    :   Divisor = 0
+    <-
+        .print("Division by 0 is not allowed");
+        Quotient = "NaN";
+    .
+@compute_division_task_1_2_2_plan
++!compute_division(Dividend,Divisor,Quotient)
+    :   true
+    <- 
+        Quotient = Dividend / Divisor;
+    .
 /* Task 1.2.2 End of your solution */
 
 /* 
