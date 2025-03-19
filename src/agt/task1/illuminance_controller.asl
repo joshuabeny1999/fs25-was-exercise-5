@@ -44,6 +44,37 @@ target_illuminance(400).
 /* 
  * Plan for reacting to the addition of the goal !manage_illuminance
  * Triggering event: addition of goal !manage_illuminance
+ * Context: the current illuminance matches the target illuminance
+ * Body: prints a message indicating that the design objective has been achieved
+*/
+@target_illuminance_reached_plan
++!manage_illuminance
+    :   current_illuminance(Current)
+        & target_illuminance(Target)
+        & Current = Target
+    <-  
+        .print("The Design objective has been achieved. Illuminance is at the desired level (", Target, " lux). No action required.");
+    .
+
+/* 
+ * Plan for reacting to the addition of the goal !manage_illuminance
+ * Triggering event: addition of goal !manage_illuminance
+ * Context: the agent believes that the blinds are lowered and that the room requires brightening
+ * Body: the agent performs the action of raising the blinds
+*/
+@increase_illuminance_with_blinds_plan
++!manage_illuminance
+    :   blinds("lowered")
+        &  requires_brightening
+        & weather("sunny")
+    <-
+        .print("Raising the blinds");
+        raiseBlinds; // performs the action of raising the blinds
+    .
+
+/* 
+ * Plan for reacting to the addition of the goal !manage_illuminance
+ * Triggering event: addition of goal !manage_illuminance
  * Context: the agent believes that the lights are off and that the room requires brightening
  * Body: the agent performs the action of turning on the lights
 */
@@ -51,6 +82,7 @@ target_illuminance(400).
 +!manage_illuminance
     :   lights("off")
         & requires_brightening
+        & weather("cloudy") | blinds("raised")
     <-
         .print("Turning on the lights");
         turnOnLights; // performs the action of turning on the lights
@@ -71,20 +103,6 @@ target_illuminance(400).
         turnOffLights; // performs the action of turning off the lights
     .
 
-/* 
- * Plan for reacting to the addition of the goal !manage_illuminance
- * Triggering event: addition of goal !manage_illuminance
- * Context: the agent believes that the blinds are lowered and that the room requires brightening
- * Body: the agent performs the action of raising the blinds
-*/
-@increase_illuminance_with_blinds_plan
-+!manage_illuminance
-    :   blinds("lowered")
-        &  requires_brightening
-    <-
-        .print("Raising the blinds");
-        raiseBlinds; // performs the action of raising the blinds
-    .
 
 /* 
  * Plan for reacting to the addition of the goal !manage_illuminance
@@ -111,21 +129,6 @@ target_illuminance(400).
     :   true
     <-
         .print("Current illuminance level: ", Current)
-    .
-
-/* 
- * Plan for reacting to the addition of the goal !manage_illuminance
- * Triggering event: addition of goal !manage_illuminance
- * Context: the current illuminance matches the target illuminance
- * Body: prints a message indicating that the design objective has been achieved
-*/
-@target_illuminance_reached_plan
-+!manage_illuminance
-    :   current_illuminance(Current)
-        & target_illuminance(Target)
-        & Current = Target
-    <-  
-        .print("The Design objective has been achieved. Illuminance is at the desired level (", Target, " lux). No action required.");
     .
 
 /* 
