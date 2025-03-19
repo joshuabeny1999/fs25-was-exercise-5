@@ -5,13 +5,19 @@
 owner_awake :- owner_state("awake").
 owner_asleep :- owner_state("asleep").
 
-best_option(Option) :- 
-    wake_up_ranking(Option, Rank)
-    & not lower_ranking_exists(Rank).
+best_option(Option) 
+    :- 
+        wake_up_ranking(Option, Rank)
+        & not lower_ranking_exists(Rank)
+        & not used_method(Option)
+    .
 
-lower_ranking_exists(Rank) :-
-    wake_up_ranking(_, LowerRank)
-    & LowerRank < Rank.
+lower_ranking_exists(Rank) 
+    :-
+        wake_up_ranking(_, LowerRank)
+        & LowerRank < Rank
+        & not used_method(_)
+    .
     
 // Beliefs
 wake_up_ranking(vibrations, 0).
@@ -92,7 +98,8 @@ wake_up_ranking(artificial_light, 2).
     <-
         .print("Attempting to wake up the user with vibrations…");
         setVibrationsMode;
-        .wait(5000);
+        +used_method(vibrations);
+        .wait(3000);
         !wake_up_user;
     .
 
@@ -102,7 +109,8 @@ wake_up_ranking(artificial_light, 2).
     <-
         .print("Attempting to wake up the user with raised blinds…");
         raiseBlinds;
-        .wait(5000);
+        +used_method(natural_light);
+        .wait(3000);
         !wake_up_user;
     .
 
@@ -112,7 +120,8 @@ wake_up_ranking(artificial_light, 2).
     <-
         .print("Attempting to wake up the user with artificaial light…");
         turnOnLights;
-        .wait(5000);
+        +used_method(artificial_light);
+        .wait(3000);
         !wake_up_user;
     .
 
@@ -121,6 +130,10 @@ wake_up_ranking(artificial_light, 2).
     : owner_awake
     <-
         .print("The design objective has been achieved: The user is now awake.");
+        -used_method(vibrations); 
+        -used_method(natural_light);
+        -used_method(artificial_light);
+        setIdleMode;
     .
 /* Task 2 End of your solution */
 
