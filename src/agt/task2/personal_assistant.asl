@@ -78,25 +78,49 @@ wake_up_ranking(artificial_light, 2).
         .print("Enjoy your event");
     .
 
-@handle_upcoming_event_asleep_vib_plan
+@handle_upcoming_event_asleep_plan
 +upcoming_event("now")
+    : owner_asleep
+    <-
+        .print("Starting wake-up routine");
+    !wake_up_user;
+    .
+
+@wake_up_user_plan_best_option_vibrations
++!wake_up_user
     : owner_asleep & best_option(vibrations)
     <-
-        .print("Starting wake-up routine with vibrations");
+        .print("Attempting to wake up the user with vibrations…");
+        setVibrationsMode;
+        .wait(5000);
+        !wake_up_user;
     .
 
-@handle_upcoming_event_asleep_wake_plan
-+upcoming_event("now")
+@wake_up_user_plan_best_option_natural_light
++!wake_up_user
     : owner_asleep & best_option(natural_light)
     <-
-        .print("Starting wake-up routine with natural light");
+        .print("Attempting to wake up the user with raised blinds…");
+        raiseBlinds;
+        .wait(5000);
+        !wake_up_user;
     .
 
-@handle_upcoming_event_asleep_art_plan
-+upcoming_event("now")
+@wake_up_user_plan_best_option_artificial_light
++!wake_up_user
     : owner_asleep & best_option(artificial_light)
     <-
-        .print("Starting wake-up routine with artificial light");
+        .print("Attempting to wake up the user with artificaial light…");
+        turnOnLights;
+        .wait(5000);
+        !wake_up_user;
+    .
+
+@wake_up_success_plan
++!wake_up_user
+    : owner_awake
+    <-
+        .print("The design objective has been achieved: The user is now awake.");
     .
 /* Task 2 End of your solution */
 
