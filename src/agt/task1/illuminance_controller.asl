@@ -114,6 +114,21 @@ target_illuminance(400).
     .
 
 /* 
+ * Plan for reacting to the addition of the goal !manage_illuminance
+ * Triggering event: addition of goal !manage_illuminance
+ * Context: the current illuminance matches the target illuminance
+ * Body: prints a message indicating that the design objective has been achieved
+*/
+@target_illuminance_reached_plan
++!manage_illuminance
+    :   current_illuminance(Current)
+        & target_illuminance(Target)
+        & Current = Target
+    <-  
+        .print("The Design objective has been achieved. Illuminance is at the desired level (", Target, " lux). No action required.");
+    .
+
+/* 
  * Plan for reacting to the addition of the belief weather(State)
  * Triggering event: addition of belief weather(State)
  * Context: true (the plan is always applicable)
