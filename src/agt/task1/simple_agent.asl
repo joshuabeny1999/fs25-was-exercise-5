@@ -34,7 +34,7 @@
 +!compute_sum(X,Y,Sum)
     : true
     <-
-        .print("Implement Task 1.2.1");
+        Sum = X + Y;
     .
 /* Task 1.2.1 End of your solution */
 
