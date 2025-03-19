@@ -1,6 +1,10 @@
 // personal assistant agent 
 
 /* Task 2 Start of your solution */
+// Interference Rules for owner_state
+owner_awake :- owner_state("awake").
+owner_asleep :- owner_state("asleep").
+
 @blinds_added_plan
 +blinds(State)
     :   true
@@ -51,6 +55,20 @@
     :   true
     <-
         .print("The owner state is removed");
+    .
+
+@handle_upcoming_event_awake_plan
++upcoming_event("now")
+    : owner_awake
+    <-
+        .print("Enjoy your event");
+    .
+
+@handle_upcoming_event_asleep_plan
++upcoming_event("now")
+    : owner_asleep
+    <-
+        .print("Starting wake-up routine");
     .
 
 /* Task 2 End of your solution */
