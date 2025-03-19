@@ -6,20 +6,20 @@
 requires_brightening
     :-  target_illuminance(Target) 
         & current_illuminance(Current)
-        & Target  > Current
+        & Target  > Current +100
     .
 
 // Inference rule for inferring the belief requires_darkening if the target illuminance is lower than the current illuminance
 requires_darkening
     :-  target_illuminance(Target)  
         & current_illuminance(Current)
-        & Target < Current
+        & Target < Current -100
     .
 
 /* Initial beliefs */
 
 // The agent believes that the target illuminance is 400 lux
-target_illuminance(400).
+target_illuminance(350).
 
 /* Initial goals */
 
@@ -51,9 +51,10 @@ target_illuminance(400).
 +!manage_illuminance
     :   current_illuminance(Current)
         & target_illuminance(Target)
-        & Current = Target
+        & Current >= Target - 100
+        & Current <= Target + 100
     <-  
-        .print("The Design objective has been achieved. Illuminance is at the desired level (", Target, " lux). No action required.");
+        .print("The Design objective has been achieved. Illuminance (", Current, " lux) is in range of desired level (", Target, "+-100 lux). No action required.");
     .
 
 /* 
