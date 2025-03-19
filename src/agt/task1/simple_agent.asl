@@ -21,8 +21,8 @@ odd(X)
 !start_division(4,0). // uncomment for Task 1.2.2
 !start_even_or_odd(4). // uncomment for Task 1.2.3
 !start_even_or_odd(5). // uncomment for Task 1.2.3
-//!start_list_generation(0,4). // uncomment for Task 1.2.4
-//!print_list([0,1,2,3,4]). // uncomment for an example of handling a list with recursion
+!start_list_generation(0,4). // uncomment for Task 1.2.4
+!print_list([0,1,2,3,4]). // uncomment for an example of handling a list with recursion
 
 /* 
  * Plan for reacting to the addition of the goal !start_sum
@@ -133,13 +133,28 @@ odd(X)
 +!start_list_generation(Start, End)
     :   true
     <-
-        !compute_list(Start, End, [], List);
+        !compute_list(Start, End, List);
         .print("List with integers from ", Start, " to ", End, ": ", List);
     .
 
 /* Task 1.2.4 Start of your solution */
 // You are allowed to use a triggering event other than the one provided 
-/* Task 1.2.4 End of your solution */
+@base_case_compute_list_plan
++!compute_list(Start, End, List)
+    : Start = End
+    <-  
+        List = [Start]; 
+
+    .
+
+@recursive_compute_list_plan
++!compute_list(Start, End, List)
+    : Start < End
+    <-  
+        NextStart = Start + 1;
+        !compute_list(NextStart, End, RemainingList);
+        List = [Start | RemainingList];
+    .
 
 /* 
  * Plan for reacting to the failure of the goal !compute_list(Start, End,_,_)
