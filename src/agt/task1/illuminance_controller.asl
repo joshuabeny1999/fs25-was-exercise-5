@@ -145,6 +145,19 @@ target_illuminance(400).
     .
 
 /* 
+ * Plan for reacting to the weather changes to cloudy
+ * Triggering event: addition of belief weather("cloudy")
+ * Context: blinds are raised
+ * Body: lowers the blinds if they are raised and the weather changed to cloudy
+*/
+@lower_blinds_when_cloudy_plan
+-weather("sunny")
+    :   blinds("raised")
+    <-  
+        .print("Lowering the blinds");
+        lowerBlinds;
+    .
+/* 
  * Plan for reacting to the addition of the belief blinds(State)
  * Triggering event: addition of belief blinds(State)
  * Context: true (the plan is always applicable)
